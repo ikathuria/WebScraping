@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="Web scraping scripts for different websites.">
+		<meta name="author" content="Ishani Kathuria">
+
+		<!-- favicon and title -->
+		<link rel="icon" href="">
+		<title>
+			{% if page != "home" %}
+				Scrape Carefully | {% block title %}{% endblock %}
+			{% else %}
+				Scrape Carefully
+			{% endif %}
+		</title>
+
+		<!-- Google fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
+
+		<!-- Bootstrap core CSS -->
+		<link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+		<!-- Additional CSS Files -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='/fontawesome/css/all.css') }}"></link>
+
+	</head>
+
+	<body>
+		<!-- nav -->
+		<nav class="navbar navbar-expand-lg fixed-top">
+			<a class="navbar-brand" href="{{ url_for('home') }}"><i class="fas fa-mask"></i></a>
+
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="nav nav-pills">
+					<li class="nav-item">
+						<a href="{{ url_for('home') }}" class="nav-link {{ 'active' if page == 'home' else '' }}">Home</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{ url_for('justdial') }}" class="nav-link {{ 'active' if page == 'justdial' else '' }}">JustDial</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{ url_for('amazon') }}" class="nav-link {{ 'active' if page == 'amazon' else '' }}">Amazon</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{ url_for('myntra') }}" class="nav-link {{ 'active' if page == 'myntra' else '' }}">Myntra</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{ url_for('google') }}" class="nav-link {{ 'active' if page == 'google' else '' }}">Google Images</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div class="jumbotron jumbotron-fluid">
+			<div class="container {{ 'home-container' if page == 'home' else '' }}">
+				<a class="heading-link" href="{% block link %}{% endblock %}" target="_blank">
+					<h1 class="display-1">
+						{% if page != "home" %}
+							<img src="{% block icon %}{% endblock %}" style="width: 80px; height: 80px">
+						{% endif %}
+						{{ self.title() }}
+					</h1>
+				</a>
+				{% block content %}{% endblock %}
+			</div>
+		</div> 
+
+		<!-- Bootstrap core JavaScript -->
+		<script src="{{ url_for('static', filename='jquery/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+	</body>
+</html>

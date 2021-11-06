@@ -1,0 +1,79 @@
+/* MAIN CSS */
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	font-family: "Open Sans", sans-serif;
+}
+
+html {
+	overflow: hidden;
+}
+
+body {
+	overflow: hidden;
+	font-size: 100%;
+}
+
+a {
+	color: white;
+}
+
+p {
+	color: white;
+}
+
+.jumbotron {
+	min-height: 100vh !important;
+	background-image: linear-gradient(rgba(10, 10, 10, .6), rgba(0, 0, 0, .9)),
+	repeating-linear-gradient(0, transparent, transparent 2px, black 3px, black 3px);
+	background-repeat: no-repeat;
+	background-position: 50% 10%;
+	background-size: cover;
+}
+
+a.nav-link {
+	color: white;
+}
+
+.heading-link:hover {
+	text-decoration: none;
+}
+
+.heading-link:hover h1 {
+	color: rgba(255, 255, 255, .3);
+}
+
+h1.display-1 {
+    font-family: "Nunito", sans-serif;
+    text-align: center;
+	margin-bottom: 20px;
+	color: white;
+}
+
+/* HOME */
+.giphy-embed {
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+}
+
+/* OTHER PAGES */
+.form-group label {
+	color: white;
+}
+
+.progress {
+	height: 30px;
+}
+
+.progress-bar {
+	width: var(--level);
+}
+
+.progress-bar-label {
+	font-weight: 2rem;
+	font-size: 1.6rem;
+	color: black;
+}

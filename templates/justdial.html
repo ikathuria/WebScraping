@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}JustDial{% endblock %}
+
+{% block icon %}
+	https://akam.cdn.jdmagicbox.com/images/icontent/jdrwd/jdlogosvg.svg
+{% endblock %}
+
+{% block link %}
+	https://www.justdial.com/
+{% endblock %}
+
+{% block content %}
+<p class="lead">
+	<form method="POST">
+		<div class="form-group">
+			<label for="select-options">Select what you want scraped</label>
+			<select name="topic" class="form-control" id="select-options">
+				<option>Doctors</option>
+				<option>Hospitals</option>
+			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="select-cities">Enter your cities in separate lines</label>
+			<textarea name="cities" class="form-control" id="select-cities" rows="3" required></textarea>
+		</div>
+
+		<button type="submit" class="btn btn-primary" data-toggle="popover" data-content="Processing your request...">Submit</button>
+	</form>
+</p>
+{% endblock %}
