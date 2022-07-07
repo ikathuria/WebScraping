@@ -47,7 +47,10 @@
 						<a href="{{ url_for('home') }}" class="nav-link {{ 'active' if page == 'home' else '' }}">Home</a>
 					</li>
 					<li class="nav-item">
-						<a href="{{ url_for('justdial') }}" class="nav-link {{ 'active' if page == 'justdial' else '' }}">JustDial</a>
+						<a href="{{ url_for('get_github_input') }}" class="nav-link {{ 'active' if page == 'github' else '' }}">GitHub</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{ url_for('get_justdial_input') }}" class="nav-link {{ 'active' if page == 'justdial' else '' }}">JustDial</a>
 					</li>
 					<li class="nav-item">
 						<a href="{{ url_for('amazon') }}" class="nav-link {{ 'active' if page == 'amazon' else '' }}">Amazon</a>
