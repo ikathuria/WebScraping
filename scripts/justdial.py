@@ -1,14 +1,15 @@
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 
 options = Options()
-# options.add_argument("--headless")
+options.add_argument("--headless")
 options.add_argument("--disable-gpu")
 options.add_argument("--no-sandbox")
 options.add_argument("enable-automation")
 options.add_argument("--disable-infobars")
 options.add_argument("--disable-dev-shm-usage")
+options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 
 
 def strings_to_num(argument):
@@ -32,7 +33,9 @@ def strings_to_num(argument):
 
 
 def scrape_justdial(topic, cities):
-    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    driver = webdriver.Chrome(
+        os.environ.get("CHROMEDRIVER_PATH"), options=options
+    )
     doc_name = []
     doc_contact = []
     doc_rating = []
