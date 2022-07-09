@@ -8,12 +8,13 @@
 }
 
 html {
-	overflow: hidden;
+	overflow-x: hidden;
 }
 
 body {
-	overflow: hidden;
+	overflow-x: hidden;
 	font-size: 100%;
+	background-color: black;
 }
 
 a {
@@ -25,12 +26,7 @@ p {
 }
 
 .jumbotron {
-	min-height: 100vh !important;
-	background-image: linear-gradient(rgba(10, 10, 10, .6), rgba(0, 0, 0, .9)),
-	repeating-linear-gradient(0, transparent, transparent 2px, black 3px, black 3px);
-	background-repeat: no-repeat;
-	background-position: 50% 10%;
-	background-size: cover;
+	background-color: black;
 }
 
 a.nav-link {

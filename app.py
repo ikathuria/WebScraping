@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from flask import request, render_template, Response, send_from_directory, url_for
+from flask import request, render_template, Response, send_from_directory, url_for, redirect
 import pandas as pd
 from scripts.justdial import scrape_justdial
 from scripts.github_pins import scrape_github
@@ -13,22 +13,25 @@ def home():
     return render_template('index.html', page="home")
 
 
-@app.route('/github', methods=["GET", "POST"])
-def get_github_input():
+@app.route('/github', defaults={'username': ''}, methods=["GET", "POST"])
+@app.route('/github/<username>')
+def github_pins(username):
     if request.method == "POST":
         username = request.form['git-user']
-
-        # making sure its not empty
         if username != '':
             data = scrape_github(username)
-
             return jsonify(data)
 
-    return render_template('github.html', page="github")
+    else:
+        if username != '':
+            data = scrape_github(username)
+            return jsonify(data)
+        else:
+            return render_template('github.html', page="github")
 
 
 @app.route('/justdial', methods=["GET", "POST"])
-def get_justdial_input():
+def justdial():
     if request.method == "POST":
         topic = request.form['topic']
         cities = request.form['cities']
