@@ -1,179 +1,138 @@
-import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-
-options = Options()
-options.add_argument("--headless")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-gpu")
-options.add_argument('--log-level=1')
-options.add_argument("enable-automation")
-options.add_argument("--disable-infobars")
-options.add_argument("--disable-dev-shm-usage")
-options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.common.exceptions import NoSuchElementException
+from webdriver_manager.chrome import ChromeDriverManager
+from scripts.utils import CustomLogger
 
 
-def get_website_image(owner, repo, link):
-    """Scraping website and image for each repo.
+class ScrapeGitHubRepos:
+    """Scrape pinned repos for any GitHub username."""
 
-    Args:
-        owner (str): Github username.
-        repo (str): Github repo name.
-        link (str): Github repo link.
+    def __init__(self, username):
+        self.logger = CustomLogger("github_scraper")
+        self.username = username
+        self.selenium_driver = self.setup_selenium_driver()
 
-    Returns:
-        web (str): Github repo website.
-        image (str): Github repo image.
-    """
-    DRIVER.get(link)
+    def setup_selenium_driver(self):
+        """Sets up the Selenium WebDriver for Chrome."""
+        options = Options()
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-gpu")
+        options.add_argument('--log-level=1')
+        options.add_argument("enable-automation")
+        options.add_argument("--disable-infobars")
+        options.add_argument("--disable-dev-shm-usage")
+        # options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 
-    # website associated with repo
-    try:
-        about = DRIVER.find_element(By.CLASS_NAME, "BorderGrid-cell")
-        web = about.find_element(By.TAG_NAME, "a")
-        if "Topic" not in web.get_attribute("title"):
-            web = web.get_attribute("href")
-        else:
-            web = ""
-    except:
-        web = ""
-
-    # image added to repo
-    try:
-        image = DRIVER.find_element(
-            By.NAME, "twitter:image:src"
-        ).get_attribute("content")
-    except:
-        image = f"https://opengraph.githubassets.com/1/{owner}/{repo}"
-
-    return web, image
-
-
-def get_repo(username, pin):
-    """Scraping details for each pinned repo.
-
-    Args:
-        username (str): Github username.
-        pin (WebElement): Pinned repo.
-
-    Returns:
-        repo (dict): Repo details.
-    """
-
-    # owner of repo
-    try:
-        owner = pin.find_element(By.CLASS_NAME, "owner").text
-    except:
-        owner = username
-
-    # repo name
-    try:
-        repo = pin.find_element(By.CLASS_NAME, "repo").text
-    except:
-        return {}
-
-    # link to repo
-    try:
-        link = f"https://github.com/{owner}/{repo}"
-    except:
-        link = ""
-
-    # description of repo
-    try:
-        description = pin.find_element(By.CLASS_NAME, "pinned-item-desc").text
-    except:
-        description = ""
-
-    # main language of repo
-    try:
-        language = pin.find_element(
-            By.CSS_SELECTOR, "span[itemprop='programmingLanguage']"
-        ).text
-    except:
-        language = ""
-
-    # language colour of repo
-    try:
-        languageColor = pin.find_element(
-            By.CLASS_NAME, "repo-language-color"
-        ).get_attribute("style")
-        languageColor = languageColor.replace("background-color: ", "")
-        languageColor = languageColor.replace(";", "")
-    except:
-        languageColor = ""
-
-    # number of stars and forks of repo
-    meta = pin.find_elements(
-        By.CLASS_NAME, "pinned-item-meta"
-    )
-
-    try:
-        stars = int(meta[0].text)
-    except:
-        stars = 0
-
-    try:
-        forks = int(meta[1].text)
-    except:
-        forks = 0
-
-    result = {
-        'owner': owner,
-        'repo': repo,
-        'link': link,
-        'description': description,
-        'image': '',
-        'website': '',
-        'language': language,
-        'languageColor': languageColor,
-        'stars': stars,
-        'forks': forks,
-    }
-
-    print(result)
-
-    return result
-
-
-def scrape_github(username):
-    """Scraping github for pinned repos.
-
-    Args:
-        username (str): Github username.
-
-    Returns:
-        data (list): list with dicts of details of pinned repos.
-    """
-    global DRIVER
-
-    data = []
-    DRIVER = webdriver.Chrome(
-        os.environ.get("CHROMEDRIVER_PATH"), options=options
-    )
-
-    try:
-        path = f"https://www.github.com/{username}"
-        DRIVER.get(path)
-        DRIVER.set_page_load_timeout(5)
-
-        # getting all pinned repos
-        pins = DRIVER.find_elements(
-            By.CLASS_NAME, "pinned-item-list-item-content"
+        # driver = webdriver.Chrome(
+        #     os.environ.get("CHROMEDRIVER_PATH"), options=options
+        # )
+        driver = webdriver.Chrome(
+            service=ChromeService(ChromeDriverManager().install()),
+            options=options
         )
 
-        # scraping details for each pinned repo
-        for pin in pins:
-            data.append(get_repo(username, pin))
+        return driver
 
-        for i in range(len(data)):
-            data[i]['website'], data[i]['image'] = get_website_image(
-                data[i]['owner'], data[i]['repo'], data[i]['link']
+    def get_website_image(self, owner, repo, link):
+        """Scrape the website and image for each repo."""
+        self.selenium_driver.get(link)
+
+        # Scraping the website associated with the repo
+        web = ""
+        try:
+            about = self.selenium_driver.find_element(
+                By.CLASS_NAME, "BorderGrid-cell")
+            web = about.find_element(By.TAG_NAME, "a").get_attribute("href")
+            if "Topic" in web:
+                web = ""
+        except Exception as e:
+            self.logger.error("fetching website", e)
+
+        # Scraping the image for the repo
+        image = ""
+        try:
+            image = self.selenium_driver.find_element(
+                By.NAME, "twitter:image:src").get_attribute("content")
+        except NoSuchElementException:
+            image = f"https://opengraph.githubassets.com/1/{owner}/{repo}"
+
+        return web, image
+
+    def get_repo(self, pin):
+        """Scrape details for each pinned repo."""
+        repo_details = {}
+
+        # Get the repo details with proper error handling
+        try:
+            try:
+                repo_details['owner'] = pin.find_element(
+                    By.CLASS_NAME, "owner").text
+            except NoSuchElementException:
+                repo_details['owner'] = self.username
+
+            try:
+                repo_details['description'] = pin.find_element(
+                    By.CLASS_NAME, "pinned-item-desc").text
+            except NoSuchElementException:
+                repo_details['description'] = ""
+
+            try:
+                repo_details['language'] = pin.find_element(
+                    By.CSS_SELECTOR, "span[itemprop='programmingLanguage']").text
+            except NoSuchElementException:
+                repo_details['language'] = ""
+
+            try:
+                repo_details['languageColor'] = pin.find_element(By.CLASS_NAME, "repo-language-color").get_attribute(
+                    "style").replace("background-color: ", "").replace(";", "")
+            except NoSuchElementException:
+                repo_details['languageColor'] = ""
+
+            repo_details['repo'] = pin.find_element(By.CLASS_NAME, "repo").text
+            repo_details['link'] = f"https://github.com/{repo_details['owner']}/{repo_details['repo']}"
+
+            meta = pin.find_elements(By.CLASS_NAME, "pinned-item-meta")
+            repo_details['stars'] = int(meta[0].text) if meta else 0
+            repo_details['forks'] = int(meta[1].text) if len(meta) > 1 else 0
+
+        except Exception as e:
+            self.logger.error(f"fetching repo details for", e)
+            return {}
+
+        return repo_details
+
+    def scrape_github(self):
+        """Scrape GitHub for pinned repos."""
+        data = []
+        try:
+            path = f"https://www.github.com/{self.username}"
+            self.selenium_driver.get(path)
+            self.selenium_driver.set_page_load_timeout(5)
+
+            # Get all pinned repos
+            pins = self.selenium_driver.find_elements(
+                By.CLASS_NAME, "pinned-item-list-item-content"
             )
 
-    except:
-        pass
+            # Scraping details for each pinned repo
+            for pin in pins:
+                data.append(self.get_repo(pin))
 
-    DRIVER.quit()
+            for i in range(len(data)):
+                data[i]['website'], data[i]['image'] = self.get_website_image(
+                    data[i]['owner'], data[i]['repo'], data[i]['link']
+                )
 
-    return data
+        except Exception as e:
+            self.logger.error("scraping GitHub", e)
+
+        finally:
+            self.selenium_driver.quit()
+        
+        self.logger.info(f"Fetched github pinned repos for {self.username} successfully:\n {data}")
+
+        return data

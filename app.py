@@ -1,8 +1,7 @@
 from flask import Flask, jsonify
-from flask import request, render_template, Response, send_from_directory, url_for, redirect
-import pandas as pd
-from scripts.justdial import scrape_justdial
-from scripts.github_pins import scrape_github
+from flask import request, render_template
+from scripts.orcid_papers import fetch_orcid_works
+from scripts.github_pins import ScrapeGitHubRepos
 
 UPLOAD_DIR = 'static/data/'
 
@@ -19,34 +18,50 @@ def github_pins(username):
     if request.method == "POST":
         username = request.form['git-user']
         if username != '':
-            data = scrape_github(username)
+            data = ScrapeGitHubRepos(username).scrape_github()
             return jsonify(data)
 
-    else:
-        if username != '':
-            data = scrape_github(username)
-            return jsonify(data)
-        else:
-            return render_template('github.html', page="github")
+    if username != '':
+        data = ScrapeGitHubRepos(username).scrape_github()
+        return jsonify(data)
+
+    return render_template('github.html', page="github")
 
 
-@app.route('/justdial', methods=["GET", "POST"])
-def justdial():
+@app.route('/orcid', defaults={'username': ''}, methods=["GET", "POST"])
+@app.route('/orcid/<username>')
+def orcid_works(username):
     if request.method == "POST":
-        topic = request.form['topic']
-        cities = request.form['cities']
+        username = request.form['orcid-user']
+        if username != '':
+            data = fetch_orcid_works(username)
+            return jsonify(data)
 
-        # making sure its not empty
-        if topic != '' and cities != '':
-            topic = topic.lower()
-            cities = cities.split('\n')
-            data = scrape_justdial(topic, cities)
-            df = pd.DataFrame.from_dict(data, orient='index').T
-            df.to_csv(UPLOAD_DIR + 'justdial.csv', index=False)
+    if username != '':
+        data = fetch_orcid_works(username)
+        return jsonify(data)
 
-            return send_from_directory(UPLOAD_DIR, 'justdial.csv')
+    return render_template('orcid.html', page="orcid")
 
-    return render_template('justdial.html', page="justdial")
+
+# @app.route('/justdial', methods=["GET", "POST"])
+# def justdial():
+#     if request.method == "POST":
+#         topic = request.form['topic']
+#         cities = request.form['cities']
+
+#         # making sure its not empty
+#         if topic != '' and cities != '':
+#             topic = topic.lower()
+#             cities = [i.lower() for i in cities.split('\n')]
+#             data = scrape_justdial(topic, cities)
+#             df = pd.DataFrame.from_dict(data, orient='index').T
+#             print(df)
+#             df.to_csv(UPLOAD_DIR + 'justdial.csv', index=False)
+
+#             return send_from_directory(UPLOAD_DIR, 'justdial.csv')
+
+    # return render_template('justdial.html', page="justdial")
 
 
 @app.route('/amazon')
