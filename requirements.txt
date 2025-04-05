@@ -1,5 +1,5 @@
-Flask==3.0.3
-gunicorn==23.0.0
-pandas==2.2.3
-webdriver_manager==4.0.2
-selenium==4.31.0
+Flask
+gunicorn
+pandas
+webdriver_manager
+selenium
