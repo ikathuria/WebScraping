@@ -44,40 +44,5 @@ def orcid_works(username):
     return render_template('orcid.html', page="orcid")
 
 
-# @app.route('/justdial', methods=["GET", "POST"])
-# def justdial():
-#     if request.method == "POST":
-#         topic = request.form['topic']
-#         cities = request.form['cities']
-
-#         # making sure its not empty
-#         if topic != '' and cities != '':
-#             topic = topic.lower()
-#             cities = [i.lower() for i in cities.split('\n')]
-#             data = scrape_justdial(topic, cities)
-#             df = pd.DataFrame.from_dict(data, orient='index').T
-#             print(df)
-#             df.to_csv(UPLOAD_DIR + 'justdial.csv', index=False)
-
-#             return send_from_directory(UPLOAD_DIR, 'justdial.csv')
-
-    # return render_template('justdial.html', page="justdial")
-
-
-@app.route('/amazon')
-def amazon():
-    return render_template('amazon.html', page="amazon")
-
-
-@app.route('/myntra')
-def myntra():
-    return render_template('myntra.html', page="myntra")
-
-
-@app.route('/google')
-def google():
-    return render_template('google.html', page="google")
-
-
 if __name__ == "__main__":
     app.run()
