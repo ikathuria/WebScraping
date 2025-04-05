@@ -3,7 +3,7 @@ from scripts.utils import CustomLogger
 
 
 def fetch_orcid_works(orcid):
-    logger = CustomLogger("orcid_scraper").get_logger()
+    logger = CustomLogger("orcid_scraper")
 
     url = f"https://pub.orcid.org/v3.0/{orcid}/works"
 
@@ -39,6 +39,8 @@ def fetch_orcid_works(orcid):
                     'publication_date': publication_date,
                     'journal_title': journal_title
                 })
+
+        logger.info(f"data fetched successfully for {orcid}:\n{papers}")
 
         return papers
 
