@@ -1,9 +1,11 @@
-import logging
 import sys
+import json
+import logging
+from flask import Response
 
 
 class CustomLogger:
-    def __init__(self, name, log_file=None, level=logging.INFO):
+    def __init__(self, name, log_file=None, level=logging.DEBUG):
         """
         Initializes the custom logger.
 
@@ -55,3 +57,7 @@ class CustomLogger:
                 f"{message} | Exception: {exception}", exc_info=True)
         else:
             self.logger.error(message)
+
+
+def render_json_data(data, status=200):
+    return Response(json.dumps(data, indent=4), status=status, mimetype='application/json')

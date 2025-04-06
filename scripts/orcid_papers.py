@@ -13,19 +13,21 @@ def fetch_orcid_works(orcid):
 
     response = requests.get(url, headers=headers)
 
-    if response.status_code == 200:
+    try:
         works = response.json()
+        titles_seen = set()
 
         papers = []
         for group in works.get('group', []):
             for work in group.get('work-summary', []):
                 title = work.get('title', {}).get(
                     'title', {}).get('value', 'No Title')
-                doi_url = ""
-                for external_id in work.get('external-ids', {}).get('external-id', []):
-                    if external_id.get('external-id-type') == 'doi':
-                        doi_url = external_id.get(
-                            'external-id-url', {}).get('value', '')
+
+                if title in titles_seen:
+                    continue
+                titles_seen.add(title)
+
+                url = work.get('url', {}).get('value', '')
 
                 publication_date = f"{work.get('publication-date', {}).get('year', {}).get('value', 'Unknown Year')}"
                 journal_title = work.get('journal-title', {})
@@ -35,15 +37,17 @@ def fetch_orcid_works(orcid):
 
                 papers.append({
                     'title': title,
-                    'doi_url': doi_url,
+                    'url': url,
                     'publication_date': publication_date,
                     'journal_title': journal_title
                 })
 
-        logger.info(f"data fetched successfully for {orcid}:\n{papers}")
+        logger.info(f"data fetched successfully for {orcid}")
+        logger.debug(papers)
 
         return papers
 
-    else:
-        logger.error("fetching data", response.text)
+    except Exception as e:
+        logger.error("fetching data", e)
+        logger.debug(response.json())
         return []
