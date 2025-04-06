@@ -9,9 +9,10 @@ UPLOAD_DIR = 'static/data/'
 
 app = Flask(__name__)
 
-@app.route("/")
+
+@app.route("/", methods=["GET", "POST"])
 def home():
-    return render_template('index.html', page="home")
+    return render_template('index.html')
 
 
 @app.route('/github', defaults={'username': None}, methods=["GET", "POST"])
@@ -24,7 +25,7 @@ def github_pins(username):
         data = ScrapeGitHubRepos(username).scrape_github()
         return render_json_data(data)
 
-    return render_template('github.html', page="github")
+    return render_template('index.html')
 
 
 @app.route('/orcid', defaults={'username': None}, methods=["GET", "POST"])
@@ -41,8 +42,9 @@ def orcid_works(username):
         data = fetch_orcid_works(username)
         return render_json_data(data)
 
-    return render_template('orcid.html', page="orcid")
+    return render_template('index.html')
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    app.run(debug=True,
+            host="0.0.0.0", port=8080)

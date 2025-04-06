@@ -1,75 +1,165 @@
-/* MAIN CSS */
+/* ========== Global Reset & Base ========== */
 * {
 	margin: 0;
 	padding: 0;
-	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	font-family: "Open Sans", sans-serif;
+	scroll-behavior: smooth;
 }
 
-html {
+html, body {
+	width: 100%;
+	min-height: 100%;
+	background-color: #0d0d0d; /* deep black */
+	color: #ffffff;
 	overflow-x: hidden;
+	font-size: 16px;
+	line-height: 1.6;
 }
 
-body {
-	overflow-x: hidden;
-	font-size: 100%;
-	background-color: black;
-}
-
-a {
-	color: white;
+/* ========== Typography ========== */
+h1, h2, h3, h4, h5 {
+	color: #ffffff;
+	font-family: "Nunito", sans-serif;
 }
 
 p {
-	color: white;
+	color: #d1d1d1;
 }
 
-.jumbotron {
-	background-color: black;
-}
-
-a.nav-link {
-	color: white;
-}
-
-.heading-link:hover {
+a {
+	color: #90caf9;
 	text-decoration: none;
 }
 
-.heading-link:hover h1 {
-	color: rgba(255, 255, 255, .3);
+a:hover {
+	color: #ffffff;
+	text-decoration: underline;
 }
 
-h1.display-1 {
-    font-family: "Nunito", sans-serif;
-    text-align: center;
-	margin-bottom: 20px;
-	color: white;
+/* ========== Navbar ========== */
+.navbar, .jumbotron {
+	background-color: #0d0d0d;
 }
 
-/* HOME */
+a.nav-link {
+	color: #ffffff;
+	transition: color 0.3s ease;
+}
+
+a.nav-link:hover {
+	color: #90caf9;
+}
+
+/* ========== Home - GIF Styling ========== */
 .giphy-embed {
-	text-align: center;
+	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin: 20px auto;
+	border-radius: 12px;
+	box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
 }
 
-/* OTHER PAGES */
+/* ========== API Cards ========== */
+.card {
+	background: #1a1a1a;
+	border: 1px solid #333;
+	border-radius: 16px;
+	box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 0 15px rgba(144, 202, 249, 0.2);
+}
+
+.card h3 {
+	color: #90caf9;
+}
+
+.input-group input,
+.input-group button {
+	height: 45px;
+	border-radius: 8px;
+}
+
+input[type="text"] {
+	background: #222;
+	color: #ffffff;
+	border: 1px solid #444;
+	padding: 8px 12px;
+}
+
+input[type="text"]:focus {
+	outline: none;
+	border-color: #90caf9;
+	background-color: #111;
+}
+
+.github-form:focus-within,
+.orcid-form:focus-within {
+  outline: 2px solid #0dcaf0;
+  border-radius: 12px;
+  transition: outline 0.2s ease-in-out;
+}
+
+
+/* ========== Form Labels & Buttons ========== */
 .form-group label {
-	color: white;
+	color: #cccccc;
 }
 
+.btn-dark {
+	background-color: #333;
+	border: none;
+	color: white;
+	transition: background-color 0.3s ease;
+}
+
+.btn-dark:hover {
+	background-color: #555;
+}
+
+/* ========== Progress Bars ========== */
 .progress {
 	height: 30px;
+	background-color: #333;
+	border-radius: 8px;
+	overflow: hidden;
 }
 
 .progress-bar {
+	background-color: #90caf9;
 	width: var(--level);
+	transition: width 0.4s ease;
 }
 
 .progress-bar-label {
-	font-weight: 2rem;
-	font-size: 1.6rem;
-	color: black;
+	font-size: 1.1rem;
+	color: #000;
+	font-weight: bold;
+	text-align: center;
+}
+
+/* ========== Misc ========== */
+.container {
+	padding: 20px 15px;
+}
+
+.mt-5 {
+	margin-top: 3rem !important;
+}
+
+.mb-4 {
+	margin-bottom: 1.5rem !important;
+}
+
+.text-center {
+	text-align: center !important;
+}
+
+.shadow-sm {
+	box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
 }

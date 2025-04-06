@@ -1,18 +1,129 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %} Home {% endblock %}
+	<head>
 
-{% block content %}
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="Web scraping scripts for different websites.">
+		<meta name="author" content="Ishani Kathuria">
 
-<div class="row">
-    <div class="col">
-        <iframe src="https://giphy.com/embed/FoVzfcqCDSb7zCynOp" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-        <p><a href="https://giphy.com/gifs/Giflytics-abjahanbin-FoVzfcqCDSb7zCynOp">via GIPHY</a></p>
-    </div>
+		<!-- favicon and title -->
+		<link rel="icon" href="">
+		<title>Scrape Carefully</title>
 
-    <div class="col">
-        <p>This website can help you collect data from various websites according to your needs.</p>
-    </div>
-</div>
+		<!-- Google fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
 
-{% endblock %}
+		<!-- Bootstrap core CSS -->
+		<link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+		<!-- Additional CSS Files -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='/fontawesome/css/all.css') }}"></link>
+
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="container mt-5">
+			<div class="text-center mb-4">
+				<h1>🔍 API Playground</h1>
+				<p class="lead text-light">Fetch dev insights or research data in seconds.</p>
+			</div>
+
+			<div class="row">
+				<!-- GitHub Scraper Box -->
+				<div class="col-md-6 mb-4">
+					<div class="card p-4 shadow-sm rounded-4 h-100">
+						<h3 class="mb-3">GitHub Pinned Repositories</h3>
+						<p>Enter a GitHub username to get their pinned repositories.</p>
+						<form method="post" action="/github" tabindex="0" class="github-form">
+							<div class="input-group mb-3">
+								<input type="text" name="git-user" class="form-control" placeholder="e.g., ikathuria" required>
+								<button type="submit" class="btn btn-secondary" id="github-fetch-btn">
+									<span class="spinner-border spinner-border-sm d-none" id="github-spinner" role="status" aria-hidden="true"></span>
+									<span id="github-fetch-text">Fetch</span>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<!-- ORCID Papers Box -->
+				<div class="col-md-6 mb-4">
+					<div class="card p-4 shadow-sm rounded-4 h-100">
+						<h3 class="mb-3">ORCID Research Papers</h3>
+						<p>Enter an ORCID iD to see the user's latest academic publications.</p>
+						<form method="post" action="/orcid" tabindex="0" class="orcid-form">
+							<div class="input-group mb-3">
+								<input type="text" name="orcid-user" class="form-control" placeholder="e.g., 0000-0002-1825-0097" required>
+								<button type="submit" class="btn btn-secondary" id="orcid-fetch-btn">
+									<span class="spinner-border spinner-border-sm d-none" id="orcid-spinner" role="status" aria-hidden="true"></span>
+									<span id="orcid-fetch-text">Fetch</span>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="text-center mt-4">
+				<blockquote class="text-light" id="quote-box"></blockquote>
+			</div>
+
+			<div class="text-center mt-5">
+				<img src="{{ url_for('static', filename='images/homepage.gif') }}"></img>
+			</div>
+		</div>
+		</div>
+
+		<!-- Bootstrap core JavaScript -->
+		<script src="{{ url_for('static', filename='jquery/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+	</body>
+
+	<footer class="text-center text-muted mt-5">
+		Made by <a href="http://ishani.kathuria.net/" target="_blank">Ishani Kathuria</a> • 
+		<a href="https://github.com/ikathuria/ikathuria.github.io" target="_blank">GitHub</a>
+	</footer>
+
+	<script>
+		document.getElementById('github-fetch-btn').addEventListener('click', function () {
+			document.getElementById('github-spinner').classList.remove('d-none');
+			document.getElementById('github-fetch-text').textContent = 'Loading...';
+		});
+
+		document.getElementById('orcid-fetch-btn').addEventListener('click', function () {
+			document.getElementById('orcid-spinner').classList.remove('d-none');
+			document.getElementById('orcid-fetch-text').textContent = 'Loading...';
+		});
+	</script>
+
+	<script>
+		const quotes = [
+			"“Talk is cheap. Show me the code.” – Linus Torvalds",
+			"“Research is what I'm doing when I don't know what I'm doing.” – Wernher von Braun",
+			"“Programs must be written for people to read.” – Harold Abelson",
+			"“Science knows no country.” – Louis Pasteur",
+			"“Code is like humor. When you have to explain it, it’s bad.” – Cory House"
+		];
+
+		document.getElementById('quote-box').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+	</script>
+
+	<script>
+		document.addEventListener('keydown', function (e) {
+			if (e.key === 'ArrowRight') {
+			document.querySelector('.orcid-form input').focus();
+			}
+			if (e.key === 'ArrowLeft') {
+			document.querySelector('.github-form input').focus();
+			}
+		});
+	</script>
+
+</html>
